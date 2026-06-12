@@ -1,0 +1,425 @@
+/* Freija's Puzzels — vrolijk, groot en aanraakbaar (doelgroep: 6 jaar). */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  font-family: "Comic Sans MS", "Comic Neue", "Chalkboard SE", "Marker Felt", sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+  overflow: hidden;
+}
+
+body {
+  background: linear-gradient(160deg, #bfe6ff 0%, #e6e1ff 55%, #ffd9ec 100%);
+  color: #4a3b6b;
+}
+
+.hidden { display: none !important; }
+
+button {
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Scherm 1: kiezen ────────────────────────────────────────────────── */
+
+#scherm-start {
+  height: 100%;
+  overflow-y: auto;
+  padding: 20px 16px 48px;
+  text-align: center;
+}
+
+#titel {
+  font-size: clamp(28px, 5vw, 52px);
+  margin: 8px 0 18px;
+  color: #7b4fa6;
+  text-shadow: 0 2px 0 #fff;
+}
+
+#knop-naam {
+  font-size: 0.55em;
+  background: #fff;
+  border-radius: 50%;
+  width: 1.9em; height: 1.9em;
+  vertical-align: middle;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.12);
+}
+#knop-naam:active { transform: scale(0.92); }
+
+#titel-invoer {
+  font-family: inherit;
+  font-size: 0.9em;
+  width: 6.5em;
+  text-align: center;
+  border: 4px solid #ffb3d6;
+  border-radius: 14px;
+  color: #7b4fa6;
+}
+
+#scherm-start h2 {
+  font-size: clamp(20px, 3vw, 30px);
+  margin: 18px 0 10px;
+  color: #5a4a85;
+}
+
+#cats {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.cat-knop {
+  font-size: clamp(18px, 2.6vw, 26px);
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: #ffffffcc;
+  color: #5a4a85;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.10);
+  border: 4px solid transparent;
+}
+.cat-knop.gekozen {
+  background: #ffe066;
+  border-color: #fff;
+  transform: scale(1.06);
+}
+
+#thumbs {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.thumb {
+  width: clamp(150px, 22vw, 240px);
+  aspect-ratio: 4 / 3;
+  border-radius: 18px;
+  background-size: cover;
+  background-position: center;
+  border: 6px solid #ffffff;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+  position: relative;
+  padding: 0;
+  transition: transform 0.15s;
+}
+.thumb.gekozen {
+  border-color: #ff7bbd;
+  transform: scale(1.08);
+  box-shadow: 0 8px 18px rgba(255,123,189,0.5);
+}
+
+.thumb-sterren {
+  position: absolute;
+  left: 0; right: 0; bottom: -4px;
+  font-size: 18px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  letter-spacing: 2px;
+  pointer-events: none;
+}
+
+#moeilijkheid {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.moeilijk-knop {
+  min-width: clamp(86px, 11vw, 120px);
+  padding: 10px 8px 12px;
+  border-radius: 18px;
+  background: #ffffffcc;
+  border: 5px solid transparent;
+  box-shadow: 0 5px 0 rgba(0,0,0,0.10);
+  color: #5a4a85;
+}
+.moeilijk-knop.gekozen {
+  background: #c9f2ff;
+  border-color: #fff;
+  transform: scale(1.08);
+}
+.moeilijk-knop .mk-n { font-size: clamp(26px, 3.4vw, 38px); font-weight: bold; display: block; }
+.moeilijk-knop .mk-sterren { font-size: 13px; display: block; margin: 2px 0; }
+.moeilijk-knop .mk-label { font-size: clamp(13px, 1.6vw, 17px); display: block; }
+
+.groot {
+  display: block;
+  margin: 26px auto 0;
+  font-size: clamp(26px, 4vw, 40px);
+  padding: 16px 54px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffd166, #ff8fb6);
+  color: #fff;
+  text-shadow: 0 2px 3px rgba(0,0,0,0.25);
+  box-shadow: 0 8px 0 #d96b96, 0 12px 22px rgba(0,0,0,0.25);
+}
+.groot:active { transform: translateY(4px); box-shadow: 0 4px 0 #d96b96; }
+
+/* ── Scherm 2: puzzelen ──────────────────────────────────────────────── */
+
+#scherm-spel { position: fixed; inset: 0; }
+
+#stagewrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+#stage {
+  position: absolute;
+  left: 0; top: 0; /* exacte positie zet game.js (gecentreerd op schaal) */
+  width: 1600px;
+  height: 1000px;
+  transform-origin: 0 0;
+  touch-action: none;
+}
+
+#hud {
+  position: absolute;
+  left: 0; top: 0;
+  width: 1600px; height: 96px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 24px;
+}
+
+.hud-knop {
+  width: 76px; height: 76px;
+  flex: none;
+  font-size: 44px;
+  border-radius: 24px;
+  background: #ffffffd9;
+  box-shadow: 0 5px 0 rgba(0,0,0,0.12);
+}
+.hud-knop:active { transform: scale(0.92); }
+.hud-knop[disabled] { opacity: 0.45; }
+
+#voortgang { flex: 1; }
+#voortgang-baan {
+  position: relative;
+  height: 30px;
+  margin: 0 30px;
+  background: #ffffff99;
+  border-radius: 999px;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.12);
+}
+#walker {
+  position: absolute;
+  left: 0%;
+  top: 50%;
+  transform: translate(-50%, -58%);
+  font-size: 52px;
+  transition: left 0.4s;
+  z-index: 2;
+}
+#finish {
+  position: absolute;
+  right: -14px;
+  top: 50%;
+  transform: translateY(-58%);
+  font-size: 52px;
+}
+#finish.feest { animation: feestje 0.6s infinite alternate; }
+@keyframes feestje { from { transform: translateY(-58%) scale(1); } to { transform: translateY(-66%) scale(1.25); } }
+
+#preview {
+  position: absolute;
+  left: 30px; top: 152px;
+  width: 240px; height: 180px;
+  border-radius: 14px;
+  border: 5px solid #fff;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+  cursor: pointer;
+  z-index: 10500;
+}
+
+#preview-groot {
+  position: absolute;
+  inset: 0;
+  background: rgba(60, 40, 90, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20000;
+  cursor: pointer;
+}
+#preview-groot > div {
+  width: min(80vw, calc(80vh * 4 / 3));
+  aspect-ratio: 4 / 3;
+  border-radius: 18px;
+  border: 8px solid #fff;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.4);
+}
+
+#frame {
+  position: absolute;
+  left: 320px; top: 152px;
+  width: 960px; height: 720px;
+  background: rgba(255,255,255,0.5);
+  border: 4px dashed rgba(90, 74, 133, 0.35);
+  border-radius: 10px;
+}
+
+#ghost {
+  position: absolute;
+  left: 320px; top: 152px;
+  width: 960px; height: 720px;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 5;
+}
+
+#doelglow {
+  position: absolute;
+  border: 6px solid #ffd166;
+  border-radius: 10px;
+  box-shadow: 0 0 24px 8px #ffd166;
+  pointer-events: none;
+  z-index: 6;
+  animation: gloei 0.7s infinite alternate;
+}
+@keyframes gloei { from { opacity: 0.45; } to { opacity: 1; } }
+
+#laden {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 60px;
+  color: #7b4fa6;
+  background: #ffffffd9;
+  padding: 20px 50px;
+  border-radius: 24px;
+  z-index: 11000;
+}
+
+#toast {
+  position: absolute;
+  left: 50%; top: 120px;
+  transform: translateX(-50%);
+  font-size: 46px;
+  background: #ffffffe6;
+  color: #d9588f;
+  padding: 14px 40px;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  z-index: 11000;
+  white-space: nowrap;
+  animation: toetert 0.3s;
+}
+@keyframes toetert { from { transform: translateX(-50%) scale(0.5); opacity: 0; } }
+
+/* ── Puzzelstukjes ───────────────────────────────────────────────────── */
+
+.stukje {
+  position: absolute;
+  left: 0; top: 0;
+  background-repeat: no-repeat;
+  cursor: grab;
+  z-index: 100;
+}
+.stukje.dragging { cursor: grabbing; will-change: transform; z-index: 9999 !important; }
+.stukje.locked { pointer-events: none; z-index: 1; }
+.stukje.respread { transition: transform 0.3s; }
+.stukje.snap-anim { transition: transform 0.12s; }
+.stukje.pulseert { animation: pulseer 0.5s infinite alternate; }
+@keyframes pulseer { from { filter: brightness(1); } to { filter: brightness(1.35); } }
+
+/* Schaduw-tiers: bij veel stukjes geen schaduw op stilliggende stukjes. */
+.n-6 .stukje, .n-12 .stukje, .n-24 .stukje { filter: drop-shadow(0 3px 4px rgba(0,0,0,0.35)); }
+.n-48 .stukje { filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); }
+.n-100 .stukje { filter: none; }
+#stage.n-100 .stukje.dragging, .stukje.dragging { filter: drop-shadow(0 6px 8px rgba(0,0,0,0.4)) !important; }
+.stukje.locked { filter: none !important; }
+
+@keyframes snap-pop { 0% { } 50% { } }
+
+/* ── Scherm 3: hoera ─────────────────────────────────────────────────── */
+
+#scherm-win {
+  position: fixed;
+  inset: 0;
+  background: rgba(80, 50, 120, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30000;
+}
+
+#win-kaart {
+  background: linear-gradient(180deg, #fff7e0, #ffe3f0);
+  border-radius: 28px;
+  border: 8px solid #fff;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+  padding: 26px 38px 32px;
+  text-align: center;
+  max-width: min(92vw, 640px);
+  animation: kaart-in 0.45s;
+}
+@keyframes kaart-in { from { transform: scale(0.6); opacity: 0; } }
+
+#win-titel { color: #d9588f; font-size: clamp(30px, 5vw, 48px); }
+
+#win-sterren { font-size: clamp(30px, 5vw, 46px); min-height: 1.3em; letter-spacing: 6px; }
+#win-sterren .nieuw { display: inline-block; animation: ster-in 0.8s; }
+@keyframes ster-in { 0% { transform: scale(0) rotate(-360deg); } 60% { transform: scale(1.6); } }
+
+#win-foto {
+  width: min(70vw, 420px);
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 6px solid #fff;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+  margin: 10px 0;
+}
+
+#win-tekst { font-size: clamp(18px, 2.6vw, 26px); color: #7b4fa6; }
+
+#win-kaart .rij { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+#win-kaart .groot { font-size: clamp(18px, 2.8vw, 28px); padding: 12px 26px; margin-top: 18px; }
+
+/* ── Confetti & draai-hint ───────────────────────────────────────────── */
+
+#confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40000;
+  overflow: hidden;
+}
+.confetto { position: absolute; border-radius: 3px; }
+
+#draaihint {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(160deg, #bfe6ff, #ffd9ec);
+  z-index: 50000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(26px, 6vw, 44px);
+  color: #7b4fa6;
+}
+#draaihint div { font-size: 2.4em; animation: draai 1.6s infinite; }
+@keyframes draai { 0%, 60% { transform: rotate(0); } 90%, 100% { transform: rotate(90deg); } }
+
+/* ── Zelftest ────────────────────────────────────────────────────────── */
+#selftest { position: fixed; left: 8px; bottom: 8px; z-index: 60000; font-size: 14px; }
+#selftest-pass { background: #2e9e44; color: #fff; padding: 6px 12px; border-radius: 8px; }
+#selftest-fail { background: #c43d3d; color: #fff; padding: 6px 12px; border-radius: 8px; }

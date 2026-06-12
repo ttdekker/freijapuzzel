@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Freija's Puzzels</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧩</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ── Scherm 1: kiezen ─────────────────────────────────────────────── -->
+<section id="scherm-start">
+  <h1 id="titel">🌈 <span id="titel-naam">Freija</span>'s Puzzels 🌈
+    <button id="knop-naam" title="Naam aanpassen">✏️</button>
+  </h1>
+
+  <h2>Kies een plaatje</h2>
+  <nav id="cats"></nav>
+  <div id="thumbs"></div>
+
+  <h2>Hoeveel stukjes?</h2>
+  <div id="moeilijkheid"></div>
+
+  <button id="knop-verder" class="groot hidden">▶ Verder spelen</button>
+  <button id="knop-spelen" class="groot">▶ Spelen!</button>
+</section>
+
+<!-- ── Scherm 2: puzzelen ───────────────────────────────────────────── -->
+<section id="scherm-spel" class="hidden">
+  <div id="stagewrap">
+    <div id="stage">
+      <div id="hud">
+        <button id="knop-home" class="hud-knop" title="Terug">🏠</button>
+        <div id="voortgang"><div id="voortgang-baan">
+          <span id="walker">🦄</span><span id="finish">🌈</span>
+        </div></div>
+        <button id="knop-hint" class="hud-knop" title="Hint">💡</button>
+        <button id="knop-hussel" class="hud-knop" title="Stukjes husselen">🔀</button>
+        <button id="knop-geluid" class="hud-knop" title="Geluid aan/uit">🔊</button>
+      </div>
+      <div id="preview" title="Voorbeeld groot bekijken"></div>
+      <div id="frame"></div>
+      <div id="ghost" class="hidden"></div>
+      <div id="doelglow" class="hidden"></div>
+      <div id="laden" class="hidden">Laden…</div>
+      <div id="toast" class="hidden"></div>
+    </div>
+  </div>
+  <div id="preview-groot" class="hidden"></div>
+  <div id="draaihint" class="hidden"><div>🔄</div>Draai je scherm</div>
+</section>
+
+<!-- ── Scherm 3: hoera ──────────────────────────────────────────────── -->
+<section id="scherm-win" class="hidden">
+  <div id="win-kaart">
+    <h1 id="win-titel">Hoera! 🎉</h1>
+    <div id="win-sterren"></div>
+    <img id="win-foto" alt="De afgemaakte puzzel">
+    <p id="win-tekst"></p>
+    <div class="rij">
+      <button id="knop-nogeens" class="groot">🔁 Nog een keer!</button>
+      <button id="knop-nieuw" class="groot">🧩 Nieuwe puzzel</button>
+    </div>
+  </div>
+</section>
+
+<div id="confetti"></div>
+<div id="selftest"></div>
+
+<script src="js/images.js"></script>
+<script src="js/jigsaw.js"></script>
+<script src="js/sounds.js"></script>
+<script src="js/effects.js"></script>
+<script src="js/board.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
