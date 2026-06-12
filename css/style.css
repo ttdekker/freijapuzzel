@@ -190,7 +190,10 @@ button {
   align-items: center;
   gap: 18px;
   padding: 0 24px;
+  z-index: 10000;          /* boven losse stukjes… */
+  pointer-events: none;    /* …maar alleen de knoppen vangen kliks */
 }
+.hud-knop { pointer-events: auto; }
 
 .hud-knop {
   width: 76px; height: 76px;

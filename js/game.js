@@ -228,6 +228,9 @@ $('preview-groot').addEventListener('click', function () {
   $('preview-groot').classList.add('hidden');
 });
 
+// ── Board-koppelingen (uitgebreid in M4) ──────────────────────────────
+Board.onWin = function () { G.scherm = 'win'; };
+
 // ── iOS/touch-verharding + audio-unlock ───────────────────────────────
 document.addEventListener('pointerdown', function () { Sounds.ensure(); }, true);
 document.addEventListener('visibilitychange', function () { Sounds.ensure(); });
