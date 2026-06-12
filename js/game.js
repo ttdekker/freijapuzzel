@@ -86,6 +86,11 @@ window.addEventListener('resize', function () {
 function bouwStartscherm() {
   $('titel-naam').textContent = G.naam;
 
+  var save = Opslag.getJSON('fp_save', null);
+  var saveOk = !!(save && save.img && IMAGES.byId(save.img).id === save.img &&
+    save.edges && save.placed && save.pos);
+  $('knop-verder').classList.toggle('hidden', !saveOk);
+
   var cats = $('cats');
   cats.innerHTML = '';
   CATS.forEach(function (cat) {
@@ -170,8 +175,15 @@ function preset() {
 }
 
 function startSpel(hervat) {
+  var save = hervat === true ? Opslag.getJSON('fp_save', null) : null;
+  if (save) {
+    G.imgId = save.img;
+    G.n = save.n;
+    if (IMAGES.byId(G.imgId).cat) G.cat = IMAGES.byId(G.imgId).cat;
+  }
   var im = IMAGES.byId(G.imgId);
   var p = preset();
+  if (save && (!save.placed || save.placed.length !== p.cols * p.rows)) save = null;
   Opslag.setJSON('fp_last', { imgId: G.imgId, n: G.n });
   toonScherm('spel');
 
@@ -198,7 +210,8 @@ function startSpel(hervat) {
         natH: foto.naturalHeight,
         cols: p.cols,
         rows: p.rows,
-        hervat: hervat === true
+        savedEdges: save ? save.edges : null,
+        savedPos: save ? { placed: save.placed, pos: save.pos } : null
       });
     };
     foto.onerror = function () { $('laden').textContent = 'Oeps, plaatje laden lukt niet 😢'; };
@@ -208,6 +221,7 @@ function startSpel(hervat) {
 
 // ── HUD-knoppen ───────────────────────────────────────────────────────
 $('knop-spelen').addEventListener('click', function () { Sounds.klik(); startSpel(false); });
+$('knop-verder').addEventListener('click', function () { Sounds.klik(); startSpel(true); });
 $('knop-home').addEventListener('click', function () {
   Sounds.klik();
   Board.clear();
@@ -232,7 +246,30 @@ $('preview-groot').addEventListener('click', function () {
 var WIN_TEKSTEN = ['Wat een puzzelkampioen! 🏆', 'Supergoed gedaan! 🌟', 'Jij kunt dit zó goed! 🦄'];
 var encGehad = {};
 
-Board.onBuilt = function () { encGehad = {}; };
+Board.onBuilt = function () {
+  encGehad = {};
+  // Bij hervatten: al gehaalde mijlpalen niet opnieuw vieren.
+  var pct = Board.pieces.length ? Board.geteld() / Board.pieces.length : 0;
+  if (pct >= 0.25) encGehad.enc25 = true;
+  if (pct >= 0.5) encGehad.enc50 = true;
+  if (pct >= 0.75) encGehad.enc75 = true;
+};
+
+// Auto-save van de lopende puzzel (incl. edge-maps, anders kloppen de
+// vormen na hervatten niet).
+function bewaarVoortgang() {
+  if (!Board.pieces.length) return;
+  var placed = Board.pieces.map(function (st) { return st.locked; });
+  if (placed.every(Boolean)) { Opslag.del('fp_save'); return; }
+  Opslag.setJSON('fp_save', {
+    img: G.imgId,
+    n: G.n,
+    edges: Board.edges(),
+    placed: placed,
+    pos: Board.pieces.map(function (st) { return [Math.round(st.x), Math.round(st.y)]; }),
+    ts: Date.now()
+  });
+}
 
 Board.onSnap = function (geteld, totaal) {
   var pct = geteld / totaal;
@@ -250,11 +287,13 @@ Board.onSnap = function (geteld, totaal) {
       Sounds.twinkel();
     }
   }
+  bewaarVoortgang();
 };
 
 Board.onWin = function () {
   G.scherm = 'win';
   window.__FP.events.push('win');
+  Opslag.del('fp_save');
   var im = IMAGES.byId(G.imgId);
 
   // Ster verdienen (per plaat × moeilijkheid, gededupliceerd).
