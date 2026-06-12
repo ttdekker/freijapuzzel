@@ -57,6 +57,7 @@ var Board = (function () {
     st.el.style.zIndex = (topZ = Math.min(topZ + 1, 8999));
     st.el.classList.add('dragging');
     zet(st, st.x, st.y);
+    Sounds.pickup();
     e.preventDefault();
   }
 
@@ -96,6 +97,7 @@ var Board = (function () {
     setTimeout(function () { st.el.classList.remove('snap-anim'); }, 160);
     geteld++;
     Sounds.plop();
+    Effects.sparkle(st.tx + st.b / 2, st.ty + st.h / 2);
     Effects.setProgress(geteld / stukjes.length);
     if (Board.onSnap) Board.onSnap(geteld, stukjes.length);
     if (geteld === stukjes.length && Board.onWin) Board.onWin();
@@ -112,6 +114,7 @@ var Board = (function () {
     $('knop-hint').disabled = false;
     $('ghost').classList.add('hidden');
     $('doelglow').classList.add('hidden');
+    $('frame').classList.remove('af');
   }
 
   // opts: {url, natB, natH, cols, rows, hervat, savedEdges, savedPos}

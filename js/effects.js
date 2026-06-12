@@ -16,6 +16,25 @@ var Effects = (function () {
     }
   }
 
+  // Vonkjes op stage-coördinaten (x,y): vieren dat een stukje vastklikt.
+  function sparkle(x, y) {
+    var stage = $('stage');
+    var tekens = ['✨', '⭐', '💛'];
+    for (var i = 0; i < 5; i++) {
+      var s = document.createElement('span');
+      s.className = 'vonkje';
+      s.textContent = tekens[i % tekens.length];
+      var hoek = (i / 5) * 6.28 + Math.random();
+      var afstand = 50 + Math.random() * 50;
+      s.style.left = x + 'px';
+      s.style.top = y + 'px';
+      s.style.setProperty('--vx', Math.cos(hoek) * afstand + 'px');
+      s.style.setProperty('--vy', Math.sin(hoek) * afstand - 30 + 'px');
+      stage.appendChild(s);
+      setTimeout(function (el) { el.remove(); }, 750, s);
+    }
+  }
+
   function toast(tekst) {
     var t = $('toast');
     t.textContent = tekst;
@@ -72,6 +91,7 @@ var Effects = (function () {
 
   return {
     setProgress: setProgress,
+    sparkle: sparkle,
     toast: toast,
     confetti: confetti,
     stopConfetti: stopConfetti
