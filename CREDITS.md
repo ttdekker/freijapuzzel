@@ -2,8 +2,10 @@
 
 **Geen externe foto's gebruikt.** Tijdens de bouw waren de fotosites
 (Openverse, Wikimedia Commons, Unsplash, Pexels, Pixabay) geblokkeerd door de
-netwerk-instellingen van de bouwomgeving. Daarom tekent de app de 9 puzzelplaten
-zelf (canvas: kleurverlopen, vormen en emoji). Zie `js/images.js`.
+netwerk-instellingen van de bouwomgeving. Daarom tekent de app de 12 puzzelplaten
+zelf (canvas: kleurverlopen, gloed, gelaagde heuvels, vormen en emoji). Zie
+`js/images.js`. Het lettertype "Baloo 2" komt van Google Fonts (OFL-licentie)
+en valt offline netjes terug op een systeemfont.
 
 ## Echte foto's toevoegen (later)
 

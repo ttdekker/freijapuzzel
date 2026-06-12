@@ -1,8 +1,9 @@
 # Freija's Puzzels 🧩
 
-Een vrolijke legpuzzel-webapp voor Freija (6): eenhoorns 🦄, bloemen 🌸 en
-dieren 🐶, van 6 tot 100 stukjes met échte puzzelvormen. Werkt op tablet
-(slepen met je vinger) én computer (muis). Geen frameworks, geen build-stap.
+Een vrolijke legpuzzel-webapp voor Freija (6): eenhoorns 🦄, bloemen 🌸,
+dieren 🐶 en de zee 🐠, van 6 tot 100 stukjes met échte puzzelvormen. Werkt
+op tablet (slepen met je vinger) én computer (muis). Geen frameworks, geen
+build-stap.
 
 ## Spelen
 
@@ -15,7 +16,7 @@ Tip: speel op een tablet in liggende stand (de app vraagt er zelf om).
 
 ## Hoe werkt het
 
-1. Kies een plaatje (🦄/🌸/🐶) en hoeveel stukjes (6, 12, 24, 48 of 100).
+1. Kies een plaatje (🦄/🌸/🐶/🐠) en hoeveel stukjes (6, 12, 24, 48 of 100).
 2. Druk op **Spelen!** en sleep de stukjes naar de goede plek — in de buurt
    is goed genoeg, het stukje klikt vanzelf vast (*plop!*).
 3. Knoppen tijdens het puzzelen:
@@ -60,6 +61,6 @@ Zelftest: open `index.html?selftest=1`.
 
 ## Credits
 
-De fotosites waren tijdens de bouw geblokkeerd; de 9 platen worden daarom
+De fotosites waren tijdens de bouw geblokkeerd; de 12 platen worden daarom
 door de app zelf getekend. Zie `CREDITS.md` voor details en voor hoe echte
 foto's verantwoord worden.
