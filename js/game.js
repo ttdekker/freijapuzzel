@@ -243,7 +243,8 @@ $('preview-groot').addEventListener('click', function () {
 });
 
 // ── Board-koppelingen: aanmoedigingen, win-flow, sterren ──────────────
-var WIN_TEKSTEN = ['Wat een puzzelkampioen! 🏆', 'Supergoed gedaan! 🌟', 'Jij kunt dit zó goed! 🦄'];
+var WIN_TEKSTEN = ['Wat een puzzelkampioen! 🏆', 'Supergoed gedaan! 🌟', 'Jij kunt dit zó goed! 🦄',
+  'Knap gepuzzeld! 🧩', 'Wauw, helemaal af! 🎈'];
 var encGehad = {};
 
 Board.onBuilt = function () {
@@ -319,12 +320,15 @@ Board.onWin = function () {
     bak.appendChild(s);
   });
 
+  // Eerst even de afgemaakte plaat "schoon" laten zien (kader-versiering
+  // weg, witte lijst + gloed), dán pas de kaart met confetti.
+  $('frame').classList.add('af');
   Sounds.tada();
   setTimeout(function () {
     if (G.scherm !== 'win') return; // intussen op huis gedrukt
     toonScherm('win');
     Effects.confetti();
-  }, 500);
+  }, 1300);
 };
 
 $('knop-nogeens').addEventListener('click', function () {

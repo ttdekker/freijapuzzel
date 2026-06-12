@@ -1,10 +1,25 @@
-/* Freija's Puzzels — vrolijk, groot en aanraakbaar (doelgroep: 6 jaar). */
+/* Freija's Puzzels — vrolijk, groot en aanraakbaar (doelgroep: 6 jaar).
+   Designtaal: zachte pastel-"candy"-stijl — ronde vormen, diepe drukknoppen,
+   rustige achtergrond met drijvende wolkjes. Smaakvol > schreeuwerig. */
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+:root {
+  --paars: #5b4a8a;
+  --paars-diep: #7b4fa6;
+  --roze: #ff7bbd;
+  --roze-diep: #d9588f;
+  --geel: #ffd166;
+  --lucht: #7bd1ff;
+  --mint: #9ef0a0;
+  --kaart: rgba(255, 255, 255, 0.82);
+  --schaduw-zacht: 0 10px 30px rgba(91, 74, 138, 0.18);
+}
+
 html, body {
   height: 100%;
-  font-family: "Comic Sans MS", "Comic Neue", "Chalkboard SE", "Marker Felt", sans-serif;
+  font-family: "Baloo 2", "Comic Neue", "Comic Sans MS", "Chalkboard SE",
+    "Marker Felt", system-ui, sans-serif;
   -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
@@ -13,8 +28,8 @@ html, body {
 }
 
 body {
-  background: linear-gradient(160deg, #bfe6ff 0%, #e6e1ff 55%, #ffd9ec 100%);
-  color: #4a3b6b;
+  background: linear-gradient(165deg, #bfe6ff 0%, #dcd9ff 45%, #ffd9ec 100%);
+  color: var(--paars);
 }
 
 .hidden { display: none !important; }
@@ -24,96 +39,169 @@ button {
   border: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  color: inherit;
 }
+button:focus-visible {
+  outline: 4px solid var(--lucht);
+  outline-offset: 2px;
+}
+
+/* ── Drijvende achtergrond-decoratie (puur CSS, achter alles) ─────────── */
+
+#decor {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+#decor span {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(2px);
+  opacity: 0.55;
+  animation: zweef 16s ease-in-out infinite alternate;
+}
+/* Wolkjes: drie overlappende witte bollen via box-shadow. */
+#decor .wolk {
+  width: 90px; height: 56px;
+  background: #fff;
+  border-radius: 999px;
+  box-shadow: -44px 14px 0 -8px #fff, 46px 14px 0 -10px #fff;
+}
+#decor .bel { background: radial-gradient(circle at 35% 30%, #ffffffcc, #ffffff22 70%); }
+#decor span:nth-child(1) { left: 6%;  top: 12%; animation-duration: 19s; }
+#decor span:nth-child(2) { left: 74%; top: 8%;  transform: scale(1.3); animation-duration: 23s; animation-delay: -6s; }
+#decor span:nth-child(3) { left: 42%; top: 22%; transform: scale(0.7); animation-duration: 17s; animation-delay: -11s; }
+#decor span:nth-child(4) { left: 12%; top: 68%; width: 120px; height: 120px; animation-delay: -3s; }
+#decor span:nth-child(5) { left: 82%; top: 62%; width: 90px; height: 90px; animation-delay: -9s; animation-duration: 21s; }
+@keyframes zweef {
+  from { translate: 0 0; }
+  to   { translate: 26px -20px; }
+}
+
+section { position: relative; z-index: 1; }
 
 /* ── Scherm 1: kiezen ────────────────────────────────────────────────── */
 
 #scherm-start {
   height: 100%;
   overflow-y: auto;
-  padding: 20px 16px 48px;
+  padding: 22px 16px 56px;
   text-align: center;
 }
 
 #titel {
-  font-size: clamp(28px, 5vw, 52px);
-  margin: 8px 0 18px;
-  color: #7b4fa6;
-  text-shadow: 0 2px 0 #fff;
+  font-size: clamp(30px, 5.2vw, 56px);
+  font-weight: 800;
+  margin: 6px 0 20px;
+  color: var(--paars-diep);
+  background: linear-gradient(110deg, #8a5fc4, #e0599c 55%, #f0a23e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 0 rgba(255,255,255,0.9));
 }
 
 #knop-naam {
-  font-size: 0.55em;
+  font-size: 0.5em;
   background: #fff;
   border-radius: 50%;
   width: 1.9em; height: 1.9em;
   vertical-align: middle;
-  box-shadow: 0 3px 0 rgba(0,0,0,0.12);
+  box-shadow: 0 3px 0 rgba(91,74,138,0.18);
+  transition: transform 0.15s;
+  -webkit-text-fill-color: initial;
 }
-#knop-naam:active { transform: scale(0.92); }
+#knop-naam:active { transform: scale(0.9); }
 
 #titel-invoer {
   font-family: inherit;
   font-size: 0.9em;
+  font-weight: 700;
   width: 6.5em;
   text-align: center;
   border: 4px solid #ffb3d6;
-  border-radius: 14px;
-  color: #7b4fa6;
+  border-radius: 16px;
+  color: var(--paars-diep);
+  -webkit-text-fill-color: var(--paars-diep);
+  background: #fff;
 }
 
 #scherm-start h2 {
   font-size: clamp(20px, 3vw, 30px);
-  margin: 18px 0 10px;
-  color: #5a4a85;
+  font-weight: 700;
+  margin: 22px 0 12px;
+  color: var(--paars);
 }
+/* Kleine slingertjes naast de kopjes. */
+#scherm-start h2::before { content: "꒰ "; color: #c9a8e8; }
+#scherm-start h2::after  { content: " ꒱"; color: #c9a8e8; }
 
 #cats {
   display: flex;
   justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .cat-knop {
   font-size: clamp(18px, 2.6vw, 26px);
-  padding: 10px 22px;
+  font-weight: 700;
+  padding: 10px 24px;
   border-radius: 999px;
-  background: #ffffffcc;
-  color: #5a4a85;
-  box-shadow: 0 4px 0 rgba(0,0,0,0.10);
+  background: var(--kaart);
+  color: var(--paars);
+  box-shadow: 0 4px 0 rgba(91,74,138,0.14);
   border: 4px solid transparent;
+  transition: transform 0.15s, background 0.15s;
 }
+.cat-knop:active { transform: scale(0.95); }
 .cat-knop.gekozen {
-  background: #ffe066;
+  background: var(--geel);
   border-color: #fff;
   transform: scale(1.06);
+  box-shadow: 0 5px 0 #dba93e, var(--schaduw-zacht);
 }
 
 #thumbs {
   display: flex;
   justify-content: center;
-  gap: 18px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
 .thumb {
   width: clamp(150px, 22vw, 240px);
   aspect-ratio: 4 / 3;
-  border-radius: 18px;
+  border-radius: 20px;
   background-size: cover;
   background-position: center;
   border: 6px solid #ffffff;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+  box-shadow: var(--schaduw-zacht);
   position: relative;
   padding: 0;
-  transition: transform 0.15s;
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
 }
+.thumb:hover { transform: translateY(-4px); }
 .thumb.gekozen {
-  border-color: #ff7bbd;
-  transform: scale(1.08);
-  box-shadow: 0 8px 18px rgba(255,123,189,0.5);
+  border-color: var(--roze);
+  transform: scale(1.08) rotate(-1.2deg);
+  box-shadow: 0 10px 24px rgba(255,123,189,0.45);
+}
+.thumb.gekozen::after {
+  content: "✓";
+  position: absolute;
+  right: -12px; top: -12px;
+  width: 34px; height: 34px;
+  line-height: 34px;
+  border-radius: 50%;
+  background: var(--roze);
+  color: #fff;
+  font-weight: 800;
+  font-size: 20px;
+  box-shadow: 0 3px 8px rgba(217,88,143,0.5);
 }
 
 .thumb-sterren {
@@ -135,33 +223,41 @@ button {
 .moeilijk-knop {
   min-width: clamp(86px, 11vw, 120px);
   padding: 10px 8px 12px;
-  border-radius: 18px;
-  background: #ffffffcc;
+  border-radius: 20px;
+  background: var(--kaart);
   border: 5px solid transparent;
-  box-shadow: 0 5px 0 rgba(0,0,0,0.10);
-  color: #5a4a85;
+  box-shadow: 0 5px 0 rgba(91,74,138,0.14);
+  color: var(--paars);
+  transition: transform 0.15s, background 0.15s;
 }
+.moeilijk-knop:active { transform: scale(0.95); }
 .moeilijk-knop.gekozen {
   background: #c9f2ff;
   border-color: #fff;
   transform: scale(1.08);
+  box-shadow: 0 6px 0 #6cb6d9, var(--schaduw-zacht);
 }
-.moeilijk-knop .mk-n { font-size: clamp(26px, 3.4vw, 38px); font-weight: bold; display: block; }
+.moeilijk-knop .mk-n { font-size: clamp(26px, 3.4vw, 38px); font-weight: 800; display: block; }
 .moeilijk-knop .mk-sterren { font-size: 13px; display: block; margin: 2px 0; }
-.moeilijk-knop .mk-label { font-size: clamp(13px, 1.6vw, 17px); display: block; }
+.moeilijk-knop .mk-label { font-size: clamp(13px, 1.6vw, 17px); font-weight: 600; display: block; }
 
 .groot {
   display: block;
-  margin: 26px auto 0;
+  margin: 28px auto 0;
   font-size: clamp(26px, 4vw, 40px);
-  padding: 16px 54px;
+  font-weight: 800;
+  padding: 16px 56px;
   border-radius: 999px;
   background: linear-gradient(180deg, #ffd166, #ff8fb6);
   color: #fff;
-  text-shadow: 0 2px 3px rgba(0,0,0,0.25);
-  box-shadow: 0 8px 0 #d96b96, 0 12px 22px rgba(0,0,0,0.25);
+  text-shadow: 0 2px 3px rgba(0,0,0,0.22);
+  box-shadow: 0 8px 0 #d96b96, 0 14px 26px rgba(217,107,150,0.35);
+  transition: transform 0.1s, box-shadow 0.1s;
 }
-.groot:active { transform: translateY(4px); box-shadow: 0 4px 0 #d96b96; }
+.groot:active { transform: translateY(5px); box-shadow: 0 3px 0 #d96b96; }
+
+#knop-verder { background: linear-gradient(180deg, #9ef0a0, #5dc9e8); box-shadow: 0 8px 0 #45a0bb, 0 14px 26px rgba(69,160,187,0.35); }
+#knop-verder:active { box-shadow: 0 3px 0 #45a0bb; }
 
 /* ── Scherm 2: puzzelen ──────────────────────────────────────────────── */
 
@@ -193,27 +289,37 @@ button {
   z-index: 10000;          /* boven losse stukjes… */
   pointer-events: none;    /* …maar alleen de knoppen vangen kliks */
 }
-.hud-knop { pointer-events: auto; }
 
 .hud-knop {
+  pointer-events: auto;
   width: 76px; height: 76px;
   flex: none;
   font-size: 44px;
-  border-radius: 24px;
-  background: #ffffffd9;
-  box-shadow: 0 5px 0 rgba(0,0,0,0.12);
+  border-radius: 26px;
+  background: rgba(255,255,255,0.88);
+  box-shadow: 0 5px 0 rgba(91,74,138,0.16), 0 8px 18px rgba(91,74,138,0.12);
+  transition: transform 0.12s;
 }
-.hud-knop:active { transform: scale(0.92); }
+.hud-knop:active { transform: scale(0.9); }
 .hud-knop[disabled] { opacity: 0.45; }
 
 #voortgang { flex: 1; }
 #voortgang-baan {
   position: relative;
-  height: 30px;
+  height: 32px;
   margin: 0 30px;
-  background: #ffffff99;
+  background: rgba(255,255,255,0.7);
   border-radius: 999px;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.12);
+  box-shadow: inset 0 2px 6px rgba(91,74,138,0.18);
+}
+#voortgang-vul {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #9ef0a0, #7bd1ff, #cba6ff, #ff8fb6);
+  background-size: 1200px 100%;
+  transition: width 0.4s;
 }
 #walker {
   position: absolute;
@@ -223,6 +329,11 @@ button {
   font-size: 52px;
   transition: left 0.4s;
   z-index: 2;
+  filter: drop-shadow(0 3px 3px rgba(91,74,138,0.3));
+}
+#walker.hup { animation: hupje 0.4s; }
+@keyframes hupje {
+  40% { transform: translate(-50%, -90%) rotate(-6deg); }
 }
 #finish {
   position: absolute;
@@ -238,13 +349,26 @@ button {
   position: absolute;
   left: 30px; top: 152px;
   width: 240px; height: 180px;
-  border-radius: 14px;
+  border-radius: 16px;
   border: 5px solid #fff;
   background-size: cover;
   background-position: center;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+  box-shadow: var(--schaduw-zacht);
   cursor: pointer;
   z-index: 10500;
+}
+/* Vergrootglas-hoekje zodat duidelijk is dat je kunt tikken. */
+#preview::after {
+  content: "🔍";
+  position: absolute;
+  right: -14px; bottom: -14px;
+  width: 44px; height: 44px;
+  line-height: 44px;
+  text-align: center;
+  font-size: 24px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 3px 8px rgba(91,74,138,0.3);
 }
 
 #preview-groot {
@@ -260,20 +384,29 @@ button {
 #preview-groot > div {
   width: min(80vw, calc(80vh * 4 / 3));
   aspect-ratio: 4 / 3;
-  border-radius: 18px;
+  border-radius: 20px;
   border: 8px solid #fff;
   background-size: cover;
   background-position: center;
   box-shadow: 0 18px 40px rgba(0,0,0,0.4);
+  animation: kaart-in 0.3s;
 }
 
 #frame {
   position: absolute;
   left: 320px; top: 152px;
   width: 960px; height: 720px;
-  background: rgba(255,255,255,0.5);
-  border: 4px dashed rgba(90, 74, 133, 0.35);
-  border-radius: 10px;
+  background: rgba(255,255,255,0.45);
+  border: 4px dashed rgba(91, 74, 138, 0.35);
+  border-radius: 12px;
+  box-shadow: inset 0 4px 18px rgba(91,74,138,0.10);
+}
+/* Bij winst: kader-versiering weg zodat de plaat schoon te zien is. */
+#frame.af {
+  background: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 8px #fff, 0 18px 50px rgba(91,74,138,0.4);
+  transition: box-shadow 0.6s;
 }
 
 #ghost {
@@ -289,9 +422,9 @@ button {
 
 #doelglow {
   position: absolute;
-  border: 6px solid #ffd166;
+  border: 6px solid var(--geel);
   border-radius: 10px;
-  box-shadow: 0 0 24px 8px #ffd166;
+  box-shadow: 0 0 24px 8px var(--geel);
   pointer-events: none;
   z-index: 6;
   animation: gloei 0.7s infinite alternate;
@@ -303,10 +436,11 @@ button {
   left: 50%; top: 50%;
   transform: translate(-50%, -50%);
   font-size: 60px;
-  color: #7b4fa6;
-  background: #ffffffd9;
+  color: var(--paars-diep);
+  background: rgba(255,255,255,0.9);
   padding: 20px 50px;
-  border-radius: 24px;
+  border-radius: 28px;
+  box-shadow: var(--schaduw-zacht);
   z-index: 11000;
 }
 
@@ -315,11 +449,12 @@ button {
   left: 50%; top: 120px;
   transform: translateX(-50%);
   font-size: 46px;
-  background: #ffffffe6;
-  color: #d9588f;
-  padding: 14px 40px;
+  font-weight: 700;
+  background: rgba(255,255,255,0.94);
+  color: var(--roze-diep);
+  padding: 14px 42px;
   border-radius: 999px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 24px rgba(91,74,138,0.25);
   z-index: 11000;
   white-space: nowrap;
   animation: toetert 0.3s;
@@ -349,7 +484,18 @@ button {
 #stage.n-100 .stukje.dragging, .stukje.dragging { filter: drop-shadow(0 6px 8px rgba(0,0,0,0.4)) !important; }
 .stukje.locked { filter: none !important; }
 
-@keyframes snap-pop { 0% { } 50% { } }
+/* Glinster-vonkjes bij het vastklikken van een stukje. */
+.vonkje {
+  position: absolute;
+  pointer-events: none;
+  z-index: 9000;
+  font-size: 34px;
+  animation: vonk 0.7s ease-out forwards;
+}
+@keyframes vonk {
+  from { transform: translate(0, 0) scale(0.4); opacity: 1; }
+  to   { transform: translate(var(--vx), var(--vy)) scale(1.2); opacity: 0; }
+}
 
 /* ── Scherm 3: hoera ─────────────────────────────────────────────────── */
 
@@ -358,43 +504,48 @@ button {
   inset: 0;
   background: rgba(80, 50, 120, 0.45);
   display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 30000;
+  /* Kaart hoger dan het scherm? Dan scrollen i.p.v. knoppen afsnijden. */
+  overflow-y: auto;
+  padding: 16px;
 }
 
 #win-kaart {
+  /* margin:auto centreert in flex én houdt de kaart bereikbaar bij overflow
+     (align-items:center zou de boven- en onderkant afknippen). */
+  margin: auto;
   background: linear-gradient(180deg, #fff7e0, #ffe3f0);
-  border-radius: 28px;
+  border-radius: 30px;
   border: 8px solid #fff;
   box-shadow: 0 24px 60px rgba(0,0,0,0.35);
-  padding: 26px 38px 32px;
+  padding: 24px 38px 30px;
   text-align: center;
   max-width: min(92vw, 640px);
   animation: kaart-in 0.45s;
 }
 @keyframes kaart-in { from { transform: scale(0.6); opacity: 0; } }
 
-#win-titel { color: #d9588f; font-size: clamp(30px, 5vw, 48px); }
+#win-titel { color: var(--roze-diep); font-size: clamp(30px, 5vw, 48px); font-weight: 800; }
 
 #win-sterren { font-size: clamp(30px, 5vw, 46px); min-height: 1.3em; letter-spacing: 6px; }
 #win-sterren .nieuw { display: inline-block; animation: ster-in 0.8s; }
 @keyframes ster-in { 0% { transform: scale(0) rotate(-360deg); } 60% { transform: scale(1.6); } }
 
 #win-foto {
-  width: min(70vw, 420px);
+  /* Ook op lage schermen (tablet liggend) past de hele kaart: foto krimpt mee. */
+  width: min(70vw, 420px, 56vh);
   aspect-ratio: 4 / 3;
   object-fit: cover;
-  border-radius: 16px;
+  border-radius: 18px;
   border: 6px solid #fff;
   box-shadow: 0 10px 24px rgba(0,0,0,0.25);
   margin: 10px 0;
 }
 
-#win-tekst { font-size: clamp(18px, 2.6vw, 26px); color: #7b4fa6; }
+#win-tekst { font-size: clamp(18px, 2.6vw, 26px); font-weight: 600; color: var(--paars-diep); }
 
 #win-kaart .rij { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-#win-kaart .groot { font-size: clamp(18px, 2.8vw, 28px); padding: 12px 26px; margin-top: 18px; }
+#win-kaart .groot { font-size: clamp(18px, 2.8vw, 28px); padding: 12px 28px; margin-top: 18px; }
 
 /* ── Confetti & draai-hint ───────────────────────────────────────────── */
 
@@ -417,10 +568,16 @@ button {
   align-items: center;
   justify-content: center;
   font-size: clamp(26px, 6vw, 44px);
-  color: #7b4fa6;
+  font-weight: 700;
+  color: var(--paars-diep);
 }
 #draaihint div { font-size: 2.4em; animation: draai 1.6s infinite; }
 @keyframes draai { 0%, 60% { transform: rotate(0); } 90%, 100% { transform: rotate(90deg); } }
+
+/* ── Minder beweging als het systeem daarom vraagt ───────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  #decor span, #finish.feest, #walker.hup, #doelglow { animation: none; }
+}
 
 /* ── Zelftest ────────────────────────────────────────────────────────── */
 #selftest { position: fixed; left: 8px; bottom: 8px; z-index: 60000; font-size: 14px; }

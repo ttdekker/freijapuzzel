@@ -44,21 +44,30 @@ var Sounds = (function () {
 
   return {
     ensure: ensure,
-    klik: function () { ensure(); toon(880, 880, 0.05, 'sine', 0.15); },
-    plop: function () { ensure(); toon(600, 180, 0.12, 'triangle', 0.3); },
+    klik: function () { ensure(); toon(880, 660, 0.06, 'sine', 0.12); },
+    // Stukje oppakken: kort blipje omhoog (zacht, anders wordt het vermoeiend).
+    pickup: function () { ensure(); toon(330, 520, 0.07, 'sine', 0.1); },
+    // Stukje vast: dof "plopje" + hoog tikje erbovenop = extra bevredigend.
+    plop: function () {
+      ensure();
+      toon(560, 160, 0.13, 'triangle', 0.3);
+      toon(1900, 1400, 0.05, 'sine', 0.12, 0.01);
+    },
     twinkel: function () {
       ensure();
-      toon(1320, 1320, 0.08, 'sine', 0.18);
-      toon(1760, 1760, 0.08, 'sine', 0.18, 0.09);
+      // Pentatonisch loopje omhoog: klinkt altijd vrolijk, nooit vals.
+      var p = [1046.5, 1174.7, 1318.5, 1568, 1760];
+      for (var i = 0; i < p.length; i++) toon(p[i], p[i], 0.1, 'sine', 0.14, i * 0.06);
     },
     tada: function () {
       ensure();
+      // Fanfaretje: arpeggio omhoog en dan een vol C-akkoord met sprankel.
       var arp = [523.25, 659.25, 783.99, 1046.5];
-      for (var i = 0; i < arp.length; i++) toon(arp[i], arp[i], 0.22, 'triangle', 0.22, i * 0.12);
-      toon(523.25, 523.25, 0.5, 'triangle', 0.16, 0.55);
-      toon(659.25, 659.25, 0.5, 'triangle', 0.16, 0.55);
-      toon(783.99, 783.99, 0.5, 'triangle', 0.16, 0.55);
-      toon(1046.5, 1046.5, 0.5, 'sine', 0.2, 0.55);
+      for (var i = 0; i < arp.length; i++) toon(arp[i], arp[i], 0.22, 'triangle', 0.22, i * 0.11);
+      var akkoord = [523.25, 659.25, 783.99, 1046.5];
+      for (var j = 0; j < akkoord.length; j++) toon(akkoord[j], akkoord[j], 0.7, 'triangle', 0.14, 0.5);
+      toon(2093, 2093, 0.5, 'sine', 0.1, 0.5);
+      toon(1568, 1760, 0.3, 'sine', 0.1, 0.85);
     },
     muted: function () { return uit; },
     toggleMuted: function () {
