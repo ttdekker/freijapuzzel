@@ -5,8 +5,15 @@ var Effects = (function () {
   var toastTimer = null;
 
   function setProgress(pct) {
-    $('walker').style.left = Math.round(pct * 100) + '%';
+    var w = $('walker');
+    w.style.left = Math.round(pct * 100) + '%';
+    $('voortgang-vul').style.width = Math.round(pct * 100) + '%';
     $('finish').classList.toggle('feest', pct >= 1);
+    if (pct > 0 && pct < 1) {
+      w.classList.remove('hup');
+      void w.offsetWidth; // animatie herstarten
+      w.classList.add('hup');
+    }
   }
 
   function toast(tekst) {
