@@ -358,12 +358,16 @@ button {
   inset: 0;
   background: rgba(80, 50, 120, 0.45);
   display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 30000;
+  /* Kaart hoger dan het scherm? Dan scrollen i.p.v. knoppen afsnijden. */
+  overflow-y: auto;
+  padding: 16px;
 }
 
 #win-kaart {
+  /* margin:auto centreert in flex én houdt de kaart bereikbaar bij overflow
+     (align-items:center zou de boven- en onderkant afknippen). */
+  margin: auto;
   background: linear-gradient(180deg, #fff7e0, #ffe3f0);
   border-radius: 28px;
   border: 8px solid #fff;
@@ -382,7 +386,8 @@ button {
 @keyframes ster-in { 0% { transform: scale(0) rotate(-360deg); } 60% { transform: scale(1.6); } }
 
 #win-foto {
-  width: min(70vw, 420px);
+  /* Ook op lage schermen (tablet liggend) past de hele kaart: foto krimpt mee. */
+  width: min(70vw, 420px, 56vh);
   aspect-ratio: 4 / 3;
   object-fit: cover;
   border-radius: 16px;
