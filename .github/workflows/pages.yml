@@ -16,9 +16,6 @@ concurrency:
 
 jobs:
   deploy:
-    # Pages werkt alleen op een publieke repo (of met GitHub Pro);
-    # zolang de repo privé is skipt deze job stilletjes.
-    if: github.event.repository.private == false
     runs-on: ubuntu-latest
     environment:
       name: github-pages
