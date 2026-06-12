@@ -228,8 +228,77 @@ $('preview-groot').addEventListener('click', function () {
   $('preview-groot').classList.add('hidden');
 });
 
-// ── Board-koppelingen (uitgebreid in M4) ──────────────────────────────
-Board.onWin = function () { G.scherm = 'win'; };
+// ── Board-koppelingen: aanmoedigingen, win-flow, sterren ──────────────
+var WIN_TEKSTEN = ['Wat een puzzelkampioen! 🏆', 'Supergoed gedaan! 🌟', 'Jij kunt dit zó goed! 🦄'];
+var encGehad = {};
+
+Board.onBuilt = function () { encGehad = {}; };
+
+Board.onSnap = function (geteld, totaal) {
+  var pct = geteld / totaal;
+  var mijlpalen = [
+    [0.25, 'enc25', 'Goed zo, ', ' 🌟'],
+    [0.5, 'enc50', 'Super, ', ' ✨'],
+    [0.75, 'enc75', 'Bijna klaar, ', ' 💪']
+  ];
+  for (var i = 0; i < mijlpalen.length; i++) {
+    var m = mijlpalen[i];
+    if (pct >= m[0] && pct < 1 && !encGehad[m[1]]) {
+      encGehad[m[1]] = true;
+      window.__FP.events.push(m[1]);
+      Effects.toast(m[2] + G.naam + '!' + m[3]);
+      Sounds.twinkel();
+    }
+  }
+};
+
+Board.onWin = function () {
+  G.scherm = 'win';
+  window.__FP.events.push('win');
+  var im = IMAGES.byId(G.imgId);
+
+  // Ster verdienen (per plaat × moeilijkheid, gededupliceerd).
+  var sterren = Opslag.getJSON('fp_stars', {});
+  var lijst = sterren[im.id] || [];
+  var nieuw = lijst.indexOf(G.n) === -1;
+  if (nieuw) {
+    lijst.push(G.n);
+    lijst.sort(function (a, b) { return a - b; });
+    sterren[im.id] = lijst;
+    Opslag.setJSON('fp_stars', sterren);
+  }
+
+  $('win-titel').textContent = 'Hoera, ' + G.naam + '! 🎉';
+  $('win-tekst').textContent = WIN_TEKSTEN[Math.floor(Math.random() * WIN_TEKSTEN.length)];
+  IMAGES.getURL(im, function (url) { $('win-foto').src = url; });
+  var bak = $('win-sterren');
+  bak.innerHTML = '';
+  lijst.forEach(function (n) {
+    var s = document.createElement('span');
+    s.textContent = '⭐';
+    if (n === G.n && nieuw) s.className = 'nieuw';
+    bak.appendChild(s);
+  });
+
+  Sounds.tada();
+  setTimeout(function () {
+    if (G.scherm !== 'win') return; // intussen op huis gedrukt
+    toonScherm('win');
+    Effects.confetti();
+  }, 500);
+};
+
+$('knop-nogeens').addEventListener('click', function () {
+  Sounds.klik();
+  Effects.stopConfetti();
+  startSpel(false); // zelfde plaat + aantal, nieuwe edge-map
+});
+$('knop-nieuw').addEventListener('click', function () {
+  Sounds.klik();
+  Effects.stopConfetti();
+  Board.clear();
+  toonScherm('start');
+});
 
 // ── iOS/touch-verharding + audio-unlock ───────────────────────────────
 document.addEventListener('pointerdown', function () { Sounds.ensure(); }, true);
@@ -278,6 +347,7 @@ function zelftest() {
 }
 
 // ── Start ─────────────────────────────────────────────────────────────
+$('knop-geluid').textContent = Sounds.muted() ? '🔇' : '🔊';
 toonScherm('start');
 if (/[?&]selftest=1/.test(location.search)) {
   setTimeout(zelftest, 300);
